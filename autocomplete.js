@@ -15,7 +15,6 @@ class Autocomplete {
     this.options = Object.assign({}, DEFAULTS, options);
     this.dropdown = null;
 
-    field.parentNode.classList.add('dropdown');
     field.setAttribute('data-bs-toggle', 'dropdown');
     field.classList.add('dropdown-toggle');
 
@@ -52,16 +51,28 @@ class Autocomplete {
     });
   }
 
+  hideDropdown() {
+    this.field.parentNode.classList.remove('dropdown');
+    this.dropdown.hide();
+  }
+
+  showDropDown() {
+    this.field.parentNode.classList.add('dropdown');
+    this.dropdown.show();
+  }
+
   setData(data) {
     this.options.data = data;
     this.renderIfNeeded();
   }
 
   renderIfNeeded() {
-    if (this.createItems() > 0)
-      this.dropdown.show();
-    else
+    if (this.createItems() > 0) {
+      this.showDropDown();
+    } else {
+      this.hideDropdown();
       this.field.click();
+    }
   }
 
   createItem(lookup, item) {
@@ -93,7 +104,7 @@ class Autocomplete {
   createItems() {
     const lookup = this.field.value;
     if (lookup.length < this.options.threshold) {
-      this.dropdown.hide();
+      this.hideDropdown();
       return 0;
     }
 
@@ -132,7 +143,7 @@ class Autocomplete {
           });
         }
 
-        this.dropdown.hide();
+        this.hideDropdown();
       })
     });
 
